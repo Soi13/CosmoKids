@@ -165,5 +165,13 @@ namespace CosmoKids
             //MessageBox.Show("Customer added successfully.", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
+        //Method for delete customer
+        public void del_customer(int id)
+        {
+
+        }
+
+
+
     }
 }
