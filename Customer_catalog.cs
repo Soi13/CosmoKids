@@ -62,6 +62,11 @@ namespace CosmoKids
 
         }
 
-     
+        private void button2_Click(object sender, EventArgs e)
+        {
+            Edit_Customer edit_Customer = new Edit_Customer();
+            edit_Customer.Owner = this;
+            edit_Customer.ShowDialog();
+        }
     }
 }

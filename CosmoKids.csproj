@@ -61,6 +61,7 @@
     <Compile Include="Add_Customer.Designer.cs">
       <DependentUpon>Add_Customer.cs</DependentUpon>
     </Compile>
+    <Compile Include="CheckEmail.cs" />
     <Compile Include="Client.cs" />
     <Compile Include="connectDB.cs" />
     <Compile Include="CosmoKids.cs" />
@@ -69,6 +70,12 @@
     </Compile>
     <Compile Include="Customer_catalog.Designer.cs">
       <DependentUpon>Customer_catalog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Edit_Customer.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Edit_Customer.Designer.cs">
+      <DependentUpon>Edit_Customer.cs</DependentUpon>
     </Compile>
     <Compile Include="Lessons.cs" />
     <Compile Include="main.cs">
@@ -84,6 +91,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Customer_catalog.resx">
       <DependentUpon>Customer_catalog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Edit_Customer.resx">
+      <DependentUpon>Edit_Customer.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="main.resx">
       <DependentUpon>main.cs</DependentUpon>

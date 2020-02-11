@@ -7,7 +7,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Text.RegularExpressions;
 
 namespace CosmoKids
 {
@@ -70,15 +69,18 @@ namespace CosmoKids
             }
 
             //Checking for correction of email
-            Regex rgx = new Regex(@"^\w+[\w-\.]*\@\w+((-\w+)|(\w*))\.[a-z]{2,3}$", RegexOptions.IgnoreCase);
-            if ((!rgx.IsMatch(textBox5.Text)) && (textBox5.Text.Length != 0))
+            CheckEmail ch_father = new CheckEmail(textBox5.Text);
+            if (!ch_father.CheckEM())
             {
                 MessageBox.Show("Incorrect format of father's Email", "Attention", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
             }
 
-            if ((!rgx.IsMatch(textBox8.Text)) && (textBox8.Text.Length != 0))
+            CheckEmail ch_mother = new CheckEmail(textBox8.Text);
+            if (!ch_mother.CheckEM())
             {
                 MessageBox.Show("Incorrect format of mother's Email", "Attention", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
             }
 
             CosmoKids customer = new CosmoKids();            
@@ -116,7 +118,7 @@ namespace CosmoKids
             customer.Sum_of_payment = Convert.ToInt32(textBox21.Text);
 
             ConnectDB new_customer = new ConnectDB();
-            new_customer.add_customer(customer.Date_of_agreement, customer.Client_surname, customer.Client_name, customer.Client_date_birth, customer.Father_name, customer.Father_address, customer.Father_home_phone, customer.Father_cell_phone, customer.Father_email, customer.Father_place_of_employment, customer.Father_work_phone, customer.Mother_name, customer.Mother_address, customer.Mother_home_phone, customer.Mother_cell_phone, customer.Mother_email, customer.Mother_place_of_employment, customer.Mother_work_phone, customer.Child_name_doctor, customer.Child_address_doctor, customer.Child_phone_doctor, customer.Child_allergies, customer.Emergency_person1_name, customer.Emergency_person1_phone, customer.Emergency_person1_relationchip_to_child, customer.Emergency_person2_name, customer.Emergency_person2_phone, customer.Emergency_person2_relationchip_to_child, customer.Person_authorized_pickup1, customer.Person_authorized_pickup2, CosmoKids.Duration_of_trial_period, customer.End_of_trial_period, customer.Sum_of_payment);
+            new_customer.Add_customer(customer.Date_of_agreement, customer.Client_surname, customer.Client_name, customer.Client_date_birth, customer.Father_name, customer.Father_address, customer.Father_home_phone, customer.Father_cell_phone, customer.Father_email, customer.Father_place_of_employment, customer.Father_work_phone, customer.Mother_name, customer.Mother_address, customer.Mother_home_phone, customer.Mother_cell_phone, customer.Mother_email, customer.Mother_place_of_employment, customer.Mother_work_phone, customer.Child_name_doctor, customer.Child_address_doctor, customer.Child_phone_doctor, customer.Child_allergies, customer.Emergency_person1_name, customer.Emergency_person1_phone, customer.Emergency_person1_relationchip_to_child, customer.Emergency_person2_name, customer.Emergency_person2_phone, customer.Emergency_person2_relationchip_to_child, customer.Person_authorized_pickup1, customer.Person_authorized_pickup2, CosmoKids.Duration_of_trial_period, customer.End_of_trial_period, customer.Sum_of_payment);
 
             //Update of DataGridView after inserting data
             Customer_catalog cc = (Customer_catalog)this.Owner;
