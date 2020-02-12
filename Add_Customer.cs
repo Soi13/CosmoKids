@@ -122,7 +122,10 @@ namespace CosmoKids
 
             //Update of DataGridView after inserting data
             Customer_catalog cc = (Customer_catalog)this.Owner;
-            new_customer.LoadCustomers(cc.dg2); 
+            new_customer.LoadCustomers(cc.dg2);
+
+            //Display count of records
+            cc.st1.Items[0].Text = "Total records: " + Convert.ToString(cc.dg2.Rows.Count);
             
             this.Close();           
 

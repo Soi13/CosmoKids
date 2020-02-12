@@ -89,7 +89,6 @@ namespace CosmoKids
             {                
                 MySqlCommand command = new MySqlCommand("SELECT * FROM daycare", connection);
                 MySqlDataAdapter da = new MySqlDataAdapter(command);//Переменная объявлена как глобальная
-                MySqlCommandBuilder cb = new MySqlCommandBuilder(da);
                 DataSet ds = new DataSet();
                 connection.Close();
                 //Заполнение DataGridView наименованиями полей 
@@ -101,17 +100,16 @@ namespace CosmoKids
         }*/
 
         //Method for loading customers from database
-        public void LoadCustomers(DataGridView d2)
+        public void LoadCustomers(DataGridView dg)
         {
             if (this.OpenConnection() == true)
             {
                 MySqlCommand command = new MySqlCommand("SELECT ID, concat(CLIENT_NAME, ' ', CLIENT_SURNAME) AS FIO, FATHER_CELL_PHONE, MOTHER_CELL_PHONE, DATE_OF_AGREEMENT  FROM customers", connection);
                 MySqlDataAdapter da = new MySqlDataAdapter(command);
-                MySqlCommandBuilder cb = new MySqlCommandBuilder(da);
                 DataSet ds = new DataSet();
                 //Заполнение DataGridView наименованиями полей
                 da.Fill(ds, "customers");
-                d2.DataSource = ds.Tables[0];
+                dg.DataSource = ds.Tables[0];
 
                 this.CloseConnection();
             }
@@ -166,9 +164,51 @@ namespace CosmoKids
         }
 
         //Method of loading customer for editing him
-        public void Load_4_editing(DataGridView d3)
+        public void Load_customers_4_editing(int idd, DateTimePicker dt1, TextBox tb1, TextBox tb2, DateTimePicker dt2, TextBox tb3, TextBox tb4, MaskedTextBox mb1, MaskedTextBox mb2, TextBox tb5, TextBox tb6, MaskedTextBox mb3, TextBox tb10, TextBox tb9, MaskedTextBox mb6, MaskedTextBox mb5, TextBox tb8, TextBox tb7, MaskedTextBox mb4, TextBox tb20, TextBox tb19, MaskedTextBox mb12, TextBox tb18, TextBox tb17, MaskedTextBox mb11, TextBox tb16, TextBox tb12, MaskedTextBox mb7, TextBox tb11, TextBox tb13, TextBox tb14, DateTimePicker dt3, TextBox tb21)
         {
+            string query = "select * from customers where ID=@id";
+            MySqlCommand cmd = new MySqlCommand(query, connection);
+            MySqlDataAdapter da = new MySqlDataAdapter(cmd);
+            DataSet ds = new DataSet();
+            cmd.Parameters.AddWithValue("id", idd);
+            da.Fill(ds, "customers");
 
+            //Assign result of query to elements on form
+            dt1.Value = Convert.ToDateTime(ds.Tables[0].Rows[0][1]);
+            tb1.Text = ds.Tables[0].Rows[0][2].ToString();
+            tb2.Text = ds.Tables[0].Rows[0][3].ToString();
+            dt2.Value = Convert.ToDateTime(ds.Tables[0].Rows[0][4]);
+            tb3.Text = ds.Tables[0].Rows[0][5].ToString();
+            tb4.Text = ds.Tables[0].Rows[0][6].ToString();
+            mb1.Text = ds.Tables[0].Rows[0][7].ToString();
+            mb2.Text = ds.Tables[0].Rows[0][8].ToString();
+            tb5.Text = ds.Tables[0].Rows[0][9].ToString();
+            tb6.Text = ds.Tables[0].Rows[0][10].ToString();
+            mb3.Text = ds.Tables[0].Rows[0][11].ToString();
+            tb10.Text = ds.Tables[0].Rows[0][12].ToString();
+            tb9.Text = ds.Tables[0].Rows[0][13].ToString();
+            mb6.Text = ds.Tables[0].Rows[0][14].ToString();
+            mb5.Text = ds.Tables[0].Rows[0][15].ToString();
+            tb8.Text = ds.Tables[0].Rows[0][16].ToString();
+            tb7.Text = ds.Tables[0].Rows[0][17].ToString();
+            mb4.Text = ds.Tables[0].Rows[0][18].ToString();
+            tb20.Text = ds.Tables[0].Rows[0][19].ToString();
+            tb19.Text = ds.Tables[0].Rows[0][20].ToString();
+            mb12.Text = ds.Tables[0].Rows[0][21].ToString();
+            tb18.Text = ds.Tables[0].Rows[0][22].ToString();
+            tb17.Text = ds.Tables[0].Rows[0][23].ToString();
+            mb11.Text = ds.Tables[0].Rows[0][24].ToString();
+            tb16.Text = ds.Tables[0].Rows[0][25].ToString();
+            tb12.Text = ds.Tables[0].Rows[0][26].ToString();
+            mb7.Text = ds.Tables[0].Rows[0][27].ToString();
+            tb11.Text = ds.Tables[0].Rows[0][28].ToString();
+            tb13.Text = ds.Tables[0].Rows[0][29].ToString();
+            tb14.Text = ds.Tables[0].Rows[0][30].ToString();
+            dt3.Value = Convert.ToDateTime(ds.Tables[0].Rows[0][32]);
+            tb21.Text = ds.Tables[0].Rows[0][33].ToString();
+
+
+            this.CloseConnection();
         }
 
         //Method for delete customer

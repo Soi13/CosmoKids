@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Threading;
 
 namespace CosmoKids
 {
@@ -16,9 +17,11 @@ namespace CosmoKids
         {
             InitializeComponent();
             dg2 = dataGridView1;
+            st1 = statusStrip1;
         }
 
         public DataGridView dg2 { get; set; }
+        public StatusStrip st1 { get; set; }
 
         public void fieldsdatagrid()
         {
@@ -56,17 +59,23 @@ namespace CosmoKids
 
         private void Customer_catalog_Shown(object sender, EventArgs e)
         {          
-            ConnectDB conn = new ConnectDB();
-            conn.LoadCustomers(dataGridView1);
-            fieldsdatagrid();
+                       
 
         }
 
         private void button2_Click(object sender, EventArgs e)
-        {
+        {                 
             Edit_Customer edit_Customer = new Edit_Customer();
             edit_Customer.Owner = this;
             edit_Customer.ShowDialog();
+        }
+
+        private void Customer_catalog_Load(object sender, EventArgs e)
+        {
+            ConnectDB conn = new ConnectDB();
+            conn.LoadCustomers(dataGridView1);
+            fieldsdatagrid();
+            statusStrip1.Items[0].Text = "Total records: " + Convert.ToString(dataGridView1.Rows.Count);
         }
     }
 }
