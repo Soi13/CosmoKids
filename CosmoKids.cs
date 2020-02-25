@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
+﻿using System.Windows.Forms;
 
 namespace CosmoKids
 {
-    class CosmoKids:Client
+    class CosmoKids : Client
     {
         private string date_of_agreement;
         private string father_name;
@@ -203,7 +198,7 @@ namespace CosmoKids
             get { return person_authorized_pickup2; }
             set { person_authorized_pickup2 = value; }
         }
-        
+
         public string End_of_trial_period
         {
             get { return end_of_trial_period; }
@@ -236,6 +231,6 @@ namespace CosmoKids
             get { return duration_of_trial_period; }
         }
 
-        
+
     }
 }

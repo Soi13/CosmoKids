@@ -1,11 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace CosmoKids
@@ -14,11 +7,11 @@ namespace CosmoKids
     {
         public Add_Customer()
         {
-            InitializeComponent();            
+            InitializeComponent();
         }
 
         private void button1_Click(object sender, EventArgs e)
-        { 
+        {
             if (textBox1.Text.Length == 0)
             {
                 MessageBox.Show("Surname of client can't be empty!", "Attention", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -83,7 +76,7 @@ namespace CosmoKids
                 return;
             }
 
-            CosmoKids customer = new CosmoKids();            
+            CosmoKids customer = new CosmoKids();
             customer.Date_of_agreement = dateTimePicker1.Value.ToShortDateString();
             customer.Client_surname = textBox1.Text;
             customer.Client_name = textBox2.Text;
@@ -126,15 +119,15 @@ namespace CosmoKids
 
             //Display count of records
             cc.st1.Items[0].Text = "Total records: " + Convert.ToString(cc.dg2.Rows.Count);
-            
-            this.Close();           
+
+            this.Close();
 
         }
 
         private void textBox21_KeyPress(object sender, KeyPressEventArgs e)
         {
             e.Handled = !char.IsDigit(e.KeyChar) && !char.IsControl(e.KeyChar) && e.KeyChar != '.';
-            return;            
+            return;
         }
     }
 }

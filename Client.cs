@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CosmoKids
 {
@@ -60,9 +56,9 @@ namespace CosmoKids
         {
             DateTime today = DateTime.Now.Date;
             DateTime dt_birth = DateTime.Parse(dt_brth);
-            res = (today - dt_birth).Days/365;
-            return res.ToString();            
+            res = (today - dt_birth).Days / 365;
+            return res.ToString();
         }
-        
+
     }
 }
