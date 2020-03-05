@@ -5,7 +5,7 @@ using System.Windows.Forms;
 
 namespace CosmoKids
 {
-    class ConnectDB
+    class ConnectDB : IDisposable
     {
         private MySqlConnection connection;
         private string server;
@@ -19,7 +19,7 @@ namespace CosmoKids
             Initialize();
         }
 
-        //Initialize values
+        //Initialize values 
         private void Initialize()
         {
             server = "127.0.0.1";
@@ -33,6 +33,24 @@ namespace CosmoKids
             connection = new MySqlConnection(connectionString);
         }
 
+
+        ////////////////////Method of getting MAX ID in specified table
+        /// <summary>
+        /// Return max ID of specified table
+        /// </summary>
+        //// <param name="table">It's a name of table which you want to get max ID</param>
+        /// <returns>Max ID</returns>
+        public int GetMaxCustomerID()
+        {            
+            MySqlCommand command = new MySqlCommand("select max(ID) from customers", connection);
+            //command.Parameters.AddWithValue("table", table);
+            MySqlDataAdapter da = new MySqlDataAdapter(command);
+            DataSet ds = new DataSet();
+            da.Fill(ds, "customers");
+            return Convert.ToInt32(ds.Tables[0].Rows[0][0]);                        
+        }
+        ///////////////////////////////////////////////////////////////////    
+        
 
         ////////////////////Open connection to database
         private bool OpenConnection()
@@ -82,23 +100,6 @@ namespace CosmoKids
         /////////////////////////////////////////////
 
 
-        /*
-        public void LoadData(DataGridView d1)
-        {            
-            if (this.OpenConnection() == true)
-            {                
-                MySqlCommand command = new MySqlCommand("SELECT * FROM daycare", connection);
-                MySqlDataAdapter da = new MySqlDataAdapter(command);//Переменная объявлена как глобальная
-                DataSet ds = new DataSet();
-                connection.Close();
-                //Заполнение DataGridView наименованиями полей 
-                da.Fill(ds, "daycare");            
-                d1.DataSource = ds.Tables[0];
-                
-                this.CloseConnection();
-            }
-        }*/
-
         /////////////////////////////Method for loading customers from database
         public void LoadCustomers(DataGridView dg)
         {
@@ -127,76 +128,120 @@ namespace CosmoKids
             if (this.OpenConnection() == true)
             {
                 //MySqlCommand command = new MySqlCommand("select CLIENT_DATE_BIRTCH, FATHER_NAME, FATHER_ADDRESS, FATHER_HOME_PHONE, FATHER_EMAIL, FATHER_PLACE_OF_EMPLOYMENT, FATHER_WORK_PHONE, MOTHER_NAME, MOTHER_ADDRESS, MOTHER_HOME_PHONE, MOTHER_EMAIL, MOTHER_PLACE_OF_EMPLOYMENT, MOTHER_WORK_PHONE, CHILD_NAME_DOCTOR, CHILD_ADDRESS_DOCTOR, CHILD_PHONE_DOCTOR, CHILD_ALLERGIES, EMERGENCY_PERSON1_NAME, EMERGENCY_PERSON1_PHONE, EMERGENCY_PERSON1_RELATIONSHIP_TO_CHILD, EMERGENCY_PERSON2_NAME, EMERGENCY_PERSON2_PHONE, EMERGENCY_PERSON2_RELATIONSHIP_TO_CHILD, PERSON_AUTHORIZED_PICKUP1, PERSON_AUTHORIZED_PICKUP2, DURATION_OF_TRIAL_PERIOD, END_OF_TRIAL_PERIOD from customers where ID=@id", connection);
-                MySqlCommand command = new MySqlCommand("SELECT 'CLIENT_DATE_BIRTCH', CLIENT_DATE_BIRTCH FROM customers WHERE ID = @id " +
+                MySqlCommand command = new MySqlCommand("SELECT 'CLIENT\\'S BIRTHDAY', CLIENT_DATE_BIRTCH FROM customers WHERE ID = @id " +
                                                         "UNION " +
-                                                        "SELECT 'FATHER_NAME', FATHER_NAME FROM customers WHERE ID = @id " +
+                                                        "SELECT 'FATHER\\'S NAME', FATHER_NAME FROM customers WHERE ID = @id " +
                                                         "UNION " +
-                                                        "SELECT 'FATHER_ADDRESS', FATHER_ADDRESS FROM customers WHERE ID = @id " +
+                                                        "SELECT 'FATHER\\'S ADDRESS', FATHER_ADDRESS FROM customers WHERE ID = @id " +
                                                         "UNION " +
-                                                        "SELECT 'FATHER_HOME_PHONE', FATHER_HOME_PHONE FROM customers WHERE ID = @id " +
+                                                        "SELECT 'FATHER\\'S HOME PHONE', FATHER_HOME_PHONE FROM customers WHERE ID = @id " +
                                                         "UNION " +
-                                                        "SELECT 'FATHER_EMAIL', FATHER_EMAIL FROM customers WHERE ID = @id " +
+                                                        "SELECT 'FATHER\\'S EMAIL', FATHER_EMAIL FROM customers WHERE ID = @id " +
                                                         "UNION " +
-                                                        "SELECT 'FATHER_PLACE_OF_EMPLOYMENT', FATHER_PLACE_OF_EMPLOYMENT FROM customers WHERE ID = @id " +
+                                                        "SELECT 'FATHER\\'S PLACE OF EMPLOYMENT', FATHER_PLACE_OF_EMPLOYMENT FROM customers WHERE ID = @id " +
                                                         "UNION " +
-                                                        "SELECT 'FATHER_WORK_PHONE', FATHER_WORK_PHONE FROM customers WHERE ID = @id " +
+                                                        "SELECT 'FATHER\\'S WORK PHONE', FATHER_WORK_PHONE FROM customers WHERE ID = @id " +
                                                         "UNION " +
-                                                        "SELECT 'MOTHER_NAME', MOTHER_NAME FROM customers WHERE ID = @id " +
+                                                        "SELECT 'MOTHER\\'S NAME', MOTHER_NAME FROM customers WHERE ID = @id " +
                                                         "UNION " +
-                                                        "SELECT 'MOTHER_ADDRESS', MOTHER_ADDRESS FROM customers WHERE ID = @id " +
+                                                        "SELECT 'MOTHER\\'S ADDRESS', MOTHER_ADDRESS FROM customers WHERE ID = @id " +
                                                         "UNION " +
-                                                        "SELECT 'MOTHER_HOME_PHONE', MOTHER_HOME_PHONE FROM customers WHERE ID = @id " +
+                                                        "SELECT 'MOTHER\\'S HOME PHONE', MOTHER_HOME_PHONE FROM customers WHERE ID = @id " +
                                                         "UNION " +
-                                                        "SELECT 'MOTHER_EMAIL', MOTHER_EMAIL FROM customers WHERE ID = @id " +
+                                                        "SELECT 'MOTHER\\'S EMAIL', MOTHER_EMAIL FROM customers WHERE ID = @id " +
                                                         "UNION " +
-                                                        "SELECT 'MOTHER_PLACE_OF_EMPLOYMENT', MOTHER_PLACE_OF_EMPLOYMENT FROM customers WHERE ID = @id " +
+                                                        "SELECT 'MOTHER\\'S PLACE OF EMPLOYMENT', MOTHER_PLACE_OF_EMPLOYMENT FROM customers WHERE ID = @id " +
                                                         "UNION " +
-                                                        "SELECT 'MOTHER_WORK_PHONE', MOTHER_WORK_PHONE FROM customers WHERE ID = @id " +
+                                                        "SELECT 'MOTHER\\'S WORK PHONE', MOTHER_WORK_PHONE FROM customers WHERE ID = @id " +
                                                         "UNION " +
-                                                        "SELECT 'CHILD_NAME_DOCTOR', CHILD_NAME_DOCTOR FROM customers WHERE ID = @id " +
+                                                        "SELECT 'CHILD\\'S DOCTOR NAME', CHILD_NAME_DOCTOR FROM customers WHERE ID = @id " +
                                                         "UNION " +
-                                                        "SELECT 'CHILD_ADDRESS_DOCTOR', CHILD_ADDRESS_DOCTOR FROM customers WHERE ID = @id " +
+                                                        "SELECT 'CHILD\\'S DOCTOR ADDRESS', CHILD_ADDRESS_DOCTOR FROM customers WHERE ID = @id " +
                                                         "UNION " +
-                                                        "SELECT 'CHILD_PHONE_DOCTOR', CHILD_PHONE_DOCTOR FROM customers WHERE ID = @id " +
+                                                        "SELECT 'CHILD\\'S DOCTOR PHONE', CHILD_PHONE_DOCTOR FROM customers WHERE ID = @id " +
                                                         "UNION " +
-                                                        "SELECT 'CHILD_ALLERGIES', CHILD_ALLERGIES FROM customers WHERE ID = @id " +
+                                                        "SELECT 'CHILD\\'S ALLERGIES', CHILD_ALLERGIES FROM customers WHERE ID = @id " +
                                                         "UNION " +
-                                                        "SELECT 'EMERGENCY_PERSON1_NAME', EMERGENCY_PERSON1_NAME FROM customers WHERE ID = @id " +
+                                                        "SELECT 'EMERGENCY PERSON NAME 1', EMERGENCY_PERSON1_NAME FROM customers WHERE ID = @id " +
                                                         "UNION " +
-                                                        "SELECT 'EMERGENCY_PERSON1_PHONE', EMERGENCY_PERSON1_PHONE FROM customers WHERE ID = @id " +
+                                                        "SELECT 'EMERGENCY PERSON PHONE 1', EMERGENCY_PERSON1_PHONE FROM customers WHERE ID = @id " +
                                                         "UNION " +
-                                                        "SELECT 'EMERGENCY_PERSON1_RELATIONSHIP_TO_CHILD', EMERGENCY_PERSON1_RELATIONSHIP_TO_CHILD FROM customers WHERE ID = @id " +
+                                                        "SELECT 'EMERGENCY PERSON RELATIONSHIP TO CHILD 1', EMERGENCY_PERSON1_RELATIONSHIP_TO_CHILD FROM customers WHERE ID = @id " +
                                                         "UNION " +
-                                                        "SELECT 'EMERGENCY_PERSON2_NAME', EMERGENCY_PERSON1_NAME FROM customers WHERE ID = @id " +
+                                                        "SELECT 'EMERGENCY PERSON NAME 2', EMERGENCY_PERSON1_NAME FROM customers WHERE ID = @id " +
                                                         "UNION " +
-                                                        "SELECT 'EMERGENCY_PERSON2_PHONE', EMERGENCY_PERSON1_PHONE FROM customers WHERE ID = @id " +
+                                                        "SELECT 'EMERGENCY PERSON PHONE 2', EMERGENCY_PERSON1_PHONE FROM customers WHERE ID = @id " +
                                                         "UNION " +
-                                                        "SELECT 'EMERGENCY_PERSON2_RELATIONSHIP_TO_CHILD', EMERGENCY_PERSON1_RELATIONSHIP_TO_CHILD FROM customers WHERE ID = @id " +
+                                                        "SELECT 'EMERGENCY PERSON RELATIONSHIP TO CHILD 2', EMERGENCY_PERSON1_RELATIONSHIP_TO_CHILD FROM customers WHERE ID = @id " +
                                                         "UNION " +
-                                                        "SELECT 'PERSON_AUTHORIZED_PICKUP1', PERSON_AUTHORIZED_PICKUP1 FROM customers WHERE ID = @id " +
+                                                        "SELECT 'PERSON AUTHORIZED PICKUP 1', PERSON_AUTHORIZED_PICKUP1 FROM customers WHERE ID = @id " +
                                                         "UNION " +
-                                                        "SELECT 'PERSON_AUTHORIZED_PICKUP2', PERSON_AUTHORIZED_PICKUP2 FROM customers WHERE ID = @id " +
+                                                        "SELECT 'PERSON AUTHORIZED PICKUP 2', PERSON_AUTHORIZED_PICKUP2 FROM customers WHERE ID = @id " +
                                                         "UNION " +
-                                                        "SELECT 'DURATION_OF_TRIAL_PERIOD', DURATION_OF_TRIAL_PERIOD FROM customers WHERE ID = @id " +
+                                                        "SELECT 'DURATION OF TRIAL PERIOD', DURATION_OF_TRIAL_PERIOD FROM customers WHERE ID = @id " +
                                                         "UNION " +
-                                                        "SELECT 'END_OF_TRIAL_PERIOD', END_OF_TRIAL_PERIOD FROM customers WHERE ID = @id "
+                                                        "SELECT 'END OF TRIAL PERIOD', END_OF_TRIAL_PERIOD FROM customers WHERE ID = @id "
                                                         , connection);
                 command.Parameters.AddWithValue("id", idd);
                 MySqlDataAdapter da = new MySqlDataAdapter(command);
                 DataSet ds = new DataSet();
                 //Заполнение DataGridView наименованиями полей
                 da.Fill(ds, "customers");
-                dg.DataSource = ds.Tables[0];
-                
+
+                dg.Invoke(new MethodInvoker(delegate ()
+                {
+                    dg.DataSource = ds.Tables[0];
+                }));
+
                 this.CloseConnection();
             }
         }
         ///////////////////////////////////////////////////////////////////////////
+        
+
+        //Method for loading payments
+        public void LoadPayments(int idd, DataGridView dg)
+        {
+            if (this.OpenConnection() == true)
+            {
+                MySqlCommand cmd = new MySqlCommand("select ID, CUSTOMERS_ID, PERIOD, SUMM_4_OPL, OPL_SUMM, DATE_OF_PAY, STATUS from pays where CUSTOMERS_ID=@id", connection);
+                cmd.Parameters.AddWithValue("id", idd);
+                MySqlDataAdapter da = new MySqlDataAdapter(cmd);
+                DataSet ds = new DataSet();
+                da.Fill(ds, "pays");
+
+                dg.Invoke(new MethodInvoker(delegate ()
+                {
+                    dg.DataSource = ds.Tables[0];
+                }));
+
+                this.CloseConnection();
+            }
+
+            
+        }
+
+
+        //Method for loading notes
+        public void LoadNotes(int idd, TextBox tb)
+        {
+            if (this.OpenConnection() == true)
+            {
+                MySqlCommand cmd = new MySqlCommand("select NOTES from pays where ID=@id", connection);
+                cmd.Parameters.AddWithValue("@id", idd);
+                MySqlDataAdapter da = new MySqlDataAdapter(cmd);
+                DataSet ds = new DataSet();
+                da.Fill(ds, "pays");
+
+                tb.Text = ds.Tables[0].Rows[0][0].ToString();
+            }
+        }
+
 
         //Method for adding customer
         public void Add_customer(string date_of_agreement, string client_surname, string client_name, string client_date_birthday, string father_name, string father_address, string father_home_phone, string father_cell_phone, string father_email, string father_place_of_employment, string father_work_phone, string mother_name, string mother_address, string mother_home_phone, string mother_cell_phone, string mother_email, string mother_place_of_employment, string mother_work_phone, string child_name_doctor, string child_address_doctor, string child_phone_doctor, string child_allergies, string emergency_person1_name, string emergency_person1_phone, string emergency_person1_relationship_to_child, string emergency_person2_name, string emergency_person2_phone, string emergency_person2_relationship_to_child, string person_authorized_pickup1, string person_authorized_pickup2, string duration_of_trial_period, string end_of_trial_period, double sum_of_payment)
-        {
-            string query = "insert into customers (DATE_OF_AGREEMENT, CLIENT_SURNAME, CLIENT_NAME, CLIENT_DATE_BIRTCH, FATHER_NAME, FATHER_ADDRESS, FATHER_HOME_PHONE, FATHER_CELL_PHONE, FATHER_EMAIL, FATHER_PLACE_OF_EMPLOYMENT, FATHER_WORK_PHONE, MOTHER_NAME, MOTHER_ADDRESS, MOTHER_HOME_PHONE, MOTHER_CELL_PHONE, MOTHER_EMAIL, MOTHER_PLACE_OF_EMPLOYMENT, MOTHER_WORK_PHONE, CHILD_NAME_DOCTOR, CHILD_ADDRESS_DOCTOR, CHILD_PHONE_DOCTOR, CHILD_ALLERGIES, EMERGENCY_PERSON1_NAME, EMERGENCY_PERSON1_PHONE, EMERGENCY_PERSON1_RELATIONSHIP_TO_CHILD, EMERGENCY_PERSON2_NAME, EMERGENCY_PERSON2_PHONE, EMERGENCY_PERSON2_RELATIONSHIP_TO_CHILD, PERSON_AUTHORIZED_PICKUP1, PERSON_AUTHORIZED_PICKUP2, DURATION_OF_TRIAL_PERIOD, END_OF_TRIAL_PERIOD, SUM_OF_PAYMENT, DATETIME) values (STR_TO_DATE(@date_of_agreement, '%m/%d/%Y'), @client_surname, @client_name, STR_TO_DATE(@client_date_birthday, '%m/%d/%Y'), @father_name, @father_address, @father_home_phone, @father_cell_phone, @father_email, @father_place_of_employment, @father_work_phone, @mother_name, @mother_address, @mother_home_phone, @mother_cell_phone, @mother_email, @mother_place_of_employment, @mother_work_phone, @child_name_doctor, @child_address_doctor, @child_phone_doctor, @child_allergies, @emergency_person1_name, @emergency_person1_phone, @emergency_person1_relationship_to_child, @emergency_person2_name, @emergency_person2_phone, @emergency_person2_relationship_to_child, @person_authorized_pickup1, @person_authorized_pickup2, @duration_of_trial_period, STR_TO_DATE(@end_of_trial_period, '%m/%d/%Y'), @sum_of_payment, NOW())";
+        {           
+            string query = "insert into customers (DATE_OF_AGREEMENT, CLIENT_SURNAME, CLIENT_NAME, CLIENT_DATE_BIRTCH, FATHER_NAME, FATHER_ADDRESS, FATHER_HOME_PHONE, FATHER_CELL_PHONE, FATHER_EMAIL, FATHER_PLACE_OF_EMPLOYMENT, FATHER_WORK_PHONE, MOTHER_NAME, MOTHER_ADDRESS, MOTHER_HOME_PHONE, MOTHER_CELL_PHONE, MOTHER_EMAIL, MOTHER_PLACE_OF_EMPLOYMENT, MOTHER_WORK_PHONE, CHILD_NAME_DOCTOR, CHILD_ADDRESS_DOCTOR, CHILD_PHONE_DOCTOR, CHILD_ALLERGIES, EMERGENCY_PERSON1_NAME, EMERGENCY_PERSON1_PHONE, EMERGENCY_PERSON1_RELATIONSHIP_TO_CHILD, EMERGENCY_PERSON2_NAME, EMERGENCY_PERSON2_PHONE, EMERGENCY_PERSON2_RELATIONSHIP_TO_CHILD, PERSON_AUTHORIZED_PICKUP1, PERSON_AUTHORIZED_PICKUP2, DURATION_OF_TRIAL_PERIOD, END_OF_TRIAL_PERIOD, SUM_OF_PAYMENT, DATETIME_CREATE) values (STR_TO_DATE(@date_of_agreement, '%m/%d/%Y'), @client_surname, @client_name, STR_TO_DATE(@client_date_birthday, '%m/%d/%Y'), @father_name, @father_address, @father_home_phone, @father_cell_phone, @father_email, @father_place_of_employment, @father_work_phone, @mother_name, @mother_address, @mother_home_phone, @mother_cell_phone, @mother_email, @mother_place_of_employment, @mother_work_phone, @child_name_doctor, @child_address_doctor, @child_phone_doctor, @child_allergies, @emergency_person1_name, @emergency_person1_phone, @emergency_person1_relationship_to_child, @emergency_person2_name, @emergency_person2_phone, @emergency_person2_relationship_to_child, @person_authorized_pickup1, @person_authorized_pickup2, @duration_of_trial_period, STR_TO_DATE(@end_of_trial_period, '%m/%d/%Y'), @sum_of_payment, NOW())";
             if (this.OpenConnection() == true)
             {
                 MySqlCommand cmd = new MySqlCommand(query, connection);
@@ -238,6 +283,26 @@ namespace CosmoKids
                 this.CloseConnection();
             }
 
+            int cust_id = this.GetMaxCustomerID(); //Get ID of inserted customer
+
+            int mn = DateTime.Now.Month;
+
+            if (this.OpenConnection() == true)
+            {
+                for (int i = mn; i <= 12; i++)
+                {
+                    string per = String.Concat(i, ".", DateTime.Now.Year);
+                    string query1 = "insert into pays (CUSTOMERS_ID, PERIOD, SUMM_4_OPL, DATETIME_CREATE) values (@customer_id, @period, @summ_4_opl, NOW())";
+                    MySqlCommand cmd1 = new MySqlCommand(query1, connection);
+                    cmd1.Parameters.AddWithValue("@customer_id", cust_id);
+                    cmd1.Parameters.AddWithValue("@period", per);
+                    cmd1.Parameters.AddWithValue("@summ_4_opl", sum_of_payment);
+                    cmd1.ExecuteNonQuery();
+                }
+
+                this.CloseConnection();
+            }            
+            
             //MessageBox.Show("Customer added successfully.", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
@@ -339,6 +404,24 @@ namespace CosmoKids
 
                 this.CloseConnection();
             }
+        }
+
+
+        //Implementation of interface of IDisposable
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                // dispose managed resources
+                connection.Close();
+            }
+            // free native resources
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
 
 

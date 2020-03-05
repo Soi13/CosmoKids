@@ -22,6 +22,9 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>
+    </DocumentationFile>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -71,6 +74,7 @@
     <Compile Include="Customer_catalog.Designer.cs">
       <DependentUpon>Customer_catalog.cs</DependentUpon>
     </Compile>
+    <Compile Include="DatesMonths.cs" />
     <Compile Include="Edit_Customer.cs">
       <SubType>Form</SubType>
     </Compile>
