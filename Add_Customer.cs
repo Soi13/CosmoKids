@@ -126,6 +126,7 @@ namespace CosmoKids
 
         private void textBox21_KeyPress(object sender, KeyPressEventArgs e)
         {
+            //Input only numbers
             e.Handled = !char.IsDigit(e.KeyChar) && !char.IsControl(e.KeyChar) && e.KeyChar != '.';
             return;
         }

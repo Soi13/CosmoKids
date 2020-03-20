@@ -546,11 +546,14 @@
             // button1
             // 
             this.button1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.button1.Image = global::CosmoKids.Properties.Resources.w24h241339195649Check24x24;
             this.button1.Location = new System.Drawing.Point(375, 516);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(199, 33);
             this.button1.TabIndex = 6;
             this.button1.Text = "OK";
+            this.button1.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.button1.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 

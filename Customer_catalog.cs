@@ -2,6 +2,7 @@
 using System.Drawing;
 using System.Threading;
 using System.Windows.Forms;
+using System.IO;
 
 namespace CosmoKids
 {
@@ -12,14 +13,18 @@ namespace CosmoKids
             InitializeComponent();
             dg1 = dataGridView2;
             dg2 = dataGridView1;
+            dg3 = dataGridView3;
             st1 = statusStrip1;
-            tb1 = textBox1;
+            tb1 = textBox1;            
         }
 
         public DataGridView dg1 { get; set; }
         public DataGridView dg2 { get; set; }
         public StatusStrip st1 { get; set; }
         public TextBox tb1 { get; set; }
+        public DataGridView dg3 { get; set; }
+        public int id_val;
+        public int id_val1;
 
         public void fieldsdatagrid()
         {            
@@ -82,7 +87,7 @@ namespace CosmoKids
         private void Customer_catalog_Load(object sender, EventArgs e)
         {            
             Control.CheckForIllegalCrossThreadCalls = false;
-
+            
             Thread th = new Thread(obj =>
             {
                 ConnectDB conn = new ConnectDB();
@@ -91,8 +96,8 @@ namespace CosmoKids
                 statusStrip1.Items[0].Text = "Total records: " + Convert.ToString(dataGridView1.Rows.Count);
             });
             th.IsBackground = true;
-            th.Start();
-            
+            th.Start();           
+
             /*ConnectDB conn = new ConnectDB();
             conn.LoadCustomers(dataGridView1);
             fieldsdatagrid();
@@ -104,7 +109,7 @@ namespace CosmoKids
         private void dataGridView1_SelectionChanged(object sender, EventArgs e)
         {
             int val = Convert.ToInt32(dataGridView1.CurrentRow.Cells[0].Value);
-
+                        
             Thread th = new Thread(obj =>
             {               
                 ConnectDB additional_info = new ConnectDB();
@@ -121,28 +126,18 @@ namespace CosmoKids
             {
                 ConnectDB payments = new ConnectDB();
                 payments.LoadPayments(val, dataGridView3);
-                fieldsdatagrid1();
+                fieldsdatagrid1();                
             });
             th1.IsBackground = true;
             th1.Start();
-        }
 
-        private void tabControl1_DrawItem(object sender, DrawItemEventArgs e)
-        { 
-            if (e.Index == tabControl1.SelectedIndex)
-            {
-                e.Graphics.DrawString(tabControl1.TabPages[e.Index].Text, new Font(tabControl1.Font, FontStyle.Bold), Brushes.White, new PointF(e.Bounds.X + 3, e.Bounds.Y + 3));
-                e.Graphics.FillRectangle(new SolidBrush(Color.Blue), e.Bounds);
-                Rectangle paddedBounds = e.Bounds;
-                paddedBounds.Inflate(-2, -2);
-                e.Graphics.DrawString(tabControl1.TabPages[e.Index].Text, this.Font, SystemBrushes.HighlightText, paddedBounds);
-            }
-            else
-            {
-                e.Graphics.DrawString(tabControl1.TabPages[e.Index].Text, tabControl1.Font, Brushes.Black, new PointF(e.Bounds.X + 3, e.Bounds.Y + 3));
-            }
-        }
+            ConnectDB pays = new ConnectDB();
+            label1.Text = "Annual payment: $" + pays.GetWholeSumofPayment(val).ToString();
+            label4.Text = "Left to pay: $" + (pays.GetWholeSumofPayment(val) - pays.GetPrevCurrPayments(val)).ToString();
+            label5.Text = "Debt for today: $" + pays.GetDebtCurrPeriod(val).ToString();
 
+        }
+        
         private void dataGridView3_SelectionChanged(object sender, EventArgs e)
         {
             int val = Convert.ToInt32(dataGridView3.CurrentRow.Cells[0].Value);
@@ -155,6 +150,79 @@ namespace CosmoKids
             th.IsBackground = true;
             th.Start();
             ;
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            if (dataGridView3.Rows.Count == 0)
+            {
+                MessageBox.Show("You can't add payment in empty list of payments!", "Attenton", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return; 
+            }
+
+            id_val = (int)dataGridView1.CurrentRow.Cells[0].Value;
+
+            ConnectDB p = new ConnectDB();
+            Add_Payment add_p = new Add_Payment();
+            add_p.Owner = this;
+            add_p.lb1.Text = "Debt for today: $" + p.GetDebtCurrPeriod(id_val).ToString();
+            add_p.ShowDialog();
+
+
+        }
+
+        private void button5_Click(object sender, EventArgs e)
+        {
+            Add_Period add_per = new Add_Period();
+            add_per.ShowDialog();
+        }
+
+        private void button6_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void toolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            int idd = Convert.ToInt32(dataGridView1.CurrentRow.Cells[0].Value);
+
+            if (openFileDialog1.ShowDialog() == DialogResult.OK)
+            {
+                ConnectDB cdb = new ConnectDB();
+
+                byte[] fileByteArray = File.ReadAllBytes(openFileDialog1.FileName);
+                string filename = Path.GetFileName(openFileDialog1.FileName);
+                cdb.TieDocumentToCustomer(idd, fileByteArray, filename);
+                
+                MessageBox.Show("Document has been tied succesfully.", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+        }
+
+        private void button8_Click(object sender, EventArgs e)
+        {
+            int idd = Convert.ToInt32(dataGridView1.CurrentRow.Cells[0].Value);
+            
+            ConnectDB cd = new ConnectDB();
+            int cnt = cd.GetCountRows(idd);
+
+            if (cnt == 0)
+            {
+                MessageBox.Show("This Customer doesn't have any binded documents.", "Attention", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+            else
+            {                
+                Show_docs sh_doc = new Show_docs();
+                sh_doc.Owner = this;
+                sh_doc.ShowDialog();
+            }
+        }
+
+        private void button7_Click(object sender, EventArgs e)
+        {
+            Orders orders = new Orders();
+            orders.Owner = this;
+            orders.ShowDialog();
         }
     }
 }
