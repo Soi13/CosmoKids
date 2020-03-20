@@ -203,7 +203,7 @@ namespace CosmoKids
             int idd = Convert.ToInt32(dataGridView1.CurrentRow.Cells[0].Value);
             
             ConnectDB cd = new ConnectDB();
-            int cnt = cd.GetCountRows(idd);
+            int cnt = cd.GetCountRows(idd, "documents");
 
             if (cnt == 0)
             {
@@ -220,9 +220,23 @@ namespace CosmoKids
 
         private void button7_Click(object sender, EventArgs e)
         {
-            Orders orders = new Orders();
-            orders.Owner = this;
-            orders.ShowDialog();
+            int idd = Convert.ToInt32(dataGridView1.CurrentRow.Cells[0].Value);
+
+            ConnectDB cd = new ConnectDB();
+            int cnt = cd.GetCountRows(idd, "orders");
+
+            if (cnt == 0)
+            {
+                MessageBox.Show("This Customer doesn't have any orders.", "Attention", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+            else
+            {
+                Orders orders = new Orders();
+                orders.Owner = this;
+                orders.ShowDialog();
+            }
+            
         }
     }
 }

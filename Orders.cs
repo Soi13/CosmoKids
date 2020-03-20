@@ -21,5 +21,15 @@ namespace CosmoKids
         {
             this.Close();
         }
+
+        private void Orders_Load(object sender, EventArgs e)
+        {
+            Customer_catalog cc = (Customer_catalog)this.Owner;
+
+            int idd = (int)cc.dg2.CurrentRow.Cells[0].Value;
+
+            ConnectDB cdb = new ConnectDB();
+            cdb.LoadOrders(idd, dataGridView1);
+        }
     }
 }

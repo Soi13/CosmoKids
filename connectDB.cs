@@ -689,15 +689,21 @@ namespace CosmoKids
             }
         }
         ////////////////////////////////////////////////////////
-        
 
 
-        /////////////Method for getting count of rows in customer's documents
-        public int GetCountRows(int idd)
+
+        /////////////Method for getting count of rows in tables according customer's ID
+        /// <summary>
+        /// Method for getting count of rows in tables according customer's ID
+        /// </summary>
+        /// <param name="idd">Customer's ID</param>
+        /// <param name="tbl">Name of table</param>
+        /// <returns></returns>
+        public int GetCountRows(int idd, string tbl)
         {
             if (this.OpenConnection() == true)
-            {
-                string query = "select count(*) from documents where CUSTOMERS_ID = @customer_id";
+            {               
+                string query = string.Format("select count(*) from {0} where CUSTOMERS_ID = @customer_id ", tbl);
                 MySqlCommand cmd = new MySqlCommand(query, connection);
                 cmd.Parameters.AddWithValue("@customer_id", idd);
                 MySqlDataAdapter da = new MySqlDataAdapter(cmd);
@@ -807,6 +813,26 @@ namespace CosmoKids
                 MySqlCommand cmd = new MySqlCommand(query, connection);
                 cmd.Parameters.AddWithValue("@id", idd);
                 cmd.ExecuteNonQuery();
+
+                this.CloseConnection();
+            }
+        }
+        ///////////////////////////////////////////
+        
+
+
+        ////////////Method for loading orders
+        public void LoadOrders(int idd, DataGridView dg)
+        {
+            if (this.OpenConnection() == true)
+            {
+                string query = "select TYPE_DOC, DATE_PAY, OSNOVANIE, SUMM_OPL, STATUS from orders where CUSTOMERS_ID = @id";
+                MySqlCommand cmd = new MySqlCommand(query, connection);
+                cmd.Parameters.AddWithValue("@id", idd);
+                MySqlDataAdapter da = new MySqlDataAdapter(cmd);
+                DataSet ds = new DataSet();
+                da.Fill(ds, "orders");
+                dg.DataSource = ds.Tables[0];
 
                 this.CloseConnection();
             }
