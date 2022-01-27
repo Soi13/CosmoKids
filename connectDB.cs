@@ -27,7 +27,7 @@ namespace CosmoKids
             server = "127.0.0.1";
             database = "cosmokids_db";
             uid = "root";
-            password = "89302810";
+            password = "";
             string connectionString;
             connectionString = "SERVER=" + server + ";" + "DATABASE=" +
             database + ";" + "UID=" + uid + ";" + "PASSWORD=" + password + ";";
